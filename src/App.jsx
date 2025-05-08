@@ -1,5 +1,15 @@
 import { useState, useEffect } from "react";
-import { Search, Trash2, Plus, Check, X, Edit, Save } from "lucide-react";
+import {
+  Search,
+  Trash2,
+  Plus,
+  Skull,
+  Edit,
+  Save,
+  ChevronDown,
+  Leaf,
+  Sprout,
+} from "lucide-react";
 import BackupManager from "./BackupManager";
 
 // Main App Component
@@ -14,6 +24,9 @@ export default function PlantTracker() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterInvasive, setFilterInvasive] = useState(false);
   const [filterRemoval, setFilterRemoval] = useState(false);
+  const [filterFound, setFilterFound] = useState(false);
+  const [filterRank, setFilterRank] = useState("");
+  const [filterType, setFilterType] = useState("");
   const [editingPlant, setEditingPlant] = useState(null);
 
   // Save plants to localStorage whenever they change
@@ -48,6 +61,15 @@ export default function PlantTracker() {
     );
   };
 
+  // Toggle found status
+  const toggleFound = (id) => {
+    setPlants(
+      plants.map((plant) =>
+        plant.id === id ? { ...plant, found: !plant.found } : plant
+      )
+    );
+  };
+
   // Update plant
   const updatePlant = (updatedPlant) => {
     setPlants(
@@ -68,74 +90,100 @@ export default function PlantTracker() {
 
     const matchesInvasive = filterInvasive ? plant.isInvasive : true;
     const matchesRemoval = filterRemoval ? plant.needsRemoval : true;
+    const matchesFound = filterFound ? plant.found : true;
+    const matchesRank = filterRank
+      ? plant.rank && plant.rank.charAt(0).toUpperCase() === filterRank
+      : true;
 
-    return matchesSearch && matchesInvasive && matchesRemoval;
+    // New condition for plant type filtering
+    const matchesType = filterType
+      ? plant.type && plant.type.toLowerCase() === filterType.toLowerCase()
+      : true;
+
+    return (
+      matchesSearch &&
+      matchesInvasive &&
+      matchesRemoval &&
+      matchesFound &&
+      matchesRank &&
+      matchesType
+    );
   });
 
   return (
-    <div className="flex flex-col h-screen bg-stone-50">
+    <div className="flex flex-col lg:h-screen bg-stone-50">
       {/* Header */}
-      <div class="bg-stone-900 md:flex md:items-center md:justify-between p-4 border-b border-stone-200">
-        <div class="min-w-0 flex-1">
-          <h2 class="text-2xl/7 font-bold text-stone-200 sm:truncate sm:text-3xl sm:tracking-tight">
+      <div className="bg-stone-900 md:flex md:items-center md:justify-between space-x-2 p-4 border-b border-stone-200">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-2xl/7 font-bold text-stone-200 sm:truncate sm:text-3xl sm:tracking-tight">
             Plant Tracker
           </h2>
         </div>
-        <div class="mt-4 flex md:mt-0 md:ml-4">
+        <div className="mt-4 flex md:mt-0 md:ml-4">
           <BackupManager
             onImport={(importedPlants) => setPlants(importedPlants)}
           />
+        </div>
+        <button
+          className="inline-flex items-center gap-x-2 rounded-sm bg-emerald-600 px-3.5 py-2 text-sm text-white shadow-xs hover:bg-emerald-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
+          onClick={() => setShowAddForm(true)}
+        >
+          <Plus size={18} />
+          <span>Add Plant</span>
+        </button>
+      </div>
+
+      <div className="bg-stone-900 mb-6 p-4 flex flex-col md:flex-row gap-4 text-white">
+        <div className="flex-1 relative">
+          <Search className="absolute left-3 top-3 text-stone-400" size={18} />
+          <input
+            type="text"
+            placeholder="Search plants..."
+            className="w-full pl-10 pr-4 py-2 rounded-sm bg-white/10 py-1.5 text-base outline-1 -outline-offset-1 outline-stone-100 placeholder:text-stone-300 focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        <div className="flex-col lg:flex-row flex gap-4">
+          <label className="flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              className="h-5 w-5 accent-emerald-600"
+              checked={filterInvasive}
+              onChange={() => setFilterInvasive(!filterInvasive)}
+            />
+            <span className="ml-2 text-sm">Invasive</span>
+          </label>
+
+          <label className="flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              className="h-5 w-5 accent-emerald-600"
+              checked={filterRemoval}
+              onChange={() => setFilterRemoval(!filterRemoval)}
+            />
+            <span className="ml-2 text-sm">Needs Removal</span>
+          </label>
+
+          <label className="flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              className="h-5 w-5 accent-emerald-600"
+              checked={filterFound}
+              onChange={() => setFilterFound(!filterFound)}
+            />
+            <span className="ml-2 text-sm">Found</span>
+          </label>
+
+          <RankFilter selectedRank={filterRank} onChange={setFilterRank} />
+          <PlantTypeFilter selectedType={filterType} onChange={setFilterType} />
         </div>
       </div>
 
       {/* Main Content */}
       <main className="flex-1 p-4 overflow-auto">
         {/* Search and Filter Bar */}
-        <div className="mb-6 flex flex-col md:flex-row gap-4">
-          <div className="flex-1 relative">
-            <Search
-              className="absolute left-3 top-3 text-stone-400"
-              size={18}
-            />
-            <input
-              type="text"
-              placeholder="Search plants..."
-              className="w-full pl-10 pr-4 py-2 rounded-sm bg-white py-1.5 text-base text-stone-900 outline-1 -outline-offset-1 outline-stone-300 placeholder:text-stone-400 focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          <div className="flex gap-4">
-            <label className="flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                className="h-5 w-5 accent-emerald-600"
-                checked={filterInvasive}
-                onChange={() => setFilterInvasive(!filterInvasive)}
-              />
-              <span className="ml-2 text-stone-700 text-sm">Invasive Only</span>
-            </label>
-
-            <label className="flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                className="h-5 w-5 accent-emerald-600"
-                checked={filterRemoval}
-                onChange={() => setFilterRemoval(!filterRemoval)}
-              />
-              <span className="ml-2 text-stone-700 text-sm">Needs Removal</span>
-            </label>
-
-            <button
-              className="inline-flex items-center gap-x-2 rounded-sm bg-emerald-600 px-3.5 py-2.5 text-sm text-white shadow-xs hover:bg-emerald-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
-              onClick={() => setShowAddForm(true)}
-            >
-              <Plus size={18} />
-              <span>Add Plant</span>
-            </button>
-          </div>
-        </div>
 
         {/* Plant List */}
         {filteredPlants.length > 0 ? (
@@ -146,6 +194,7 @@ export default function PlantTracker() {
                 plant={plant}
                 onRemove={removePlant}
                 onToggleRemoval={toggleRemoval}
+                onToggleFound={toggleFound}
                 onEdit={() => setEditingPlant(plant)}
               />
             ))}
@@ -177,24 +226,121 @@ export default function PlantTracker() {
   );
 }
 
+function RankFilter({ selectedRank, onChange }) {
+  return (
+    <div className="relative">
+      <label htmlFor="rank" className="absolute -top-4 text-xs uppercase">
+        Plant Ranking:
+      </label>
+      <div className="grid grid-cols-1">
+        <select
+          id="rank-filter"
+          value={selectedRank}
+          onChange={(e) => onChange(e.target.value)}
+          className="col-start-1 row-start-1 w-full appearance-none rounded-sm py-1 pl-3 pr-8 text-base text-white/80 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
+        >
+          <option value="">All Ranks</option>
+          <option value="N">N - Native</option>
+          <option value="A">A - High Priority Invasive</option>
+          <option value="B">B - Medium Priority Invasive</option>
+          <option value="C">C - Widespread Invasive</option>
+          <option value="D">D - Less Aggressive Invasive</option>
+          <option value="W">W - Watch Species Invasive</option>
+        </select>
+        <ChevronDown
+          aria-hidden="true"
+          className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-white sm:size-4"
+        />
+      </div>
+    </div>
+  );
+}
+
+function PlantTypeFilter({ selectedType, onChange }) {
+  return (
+    <div className="relative">
+      <label
+        htmlFor="type-filter"
+        className="absolute -top-4 text-xs uppercase"
+      >
+        Type:
+      </label>
+      <div className="grid grid-cols-1">
+        <select
+          id="type-filter"
+          value={selectedType}
+          onChange={(e) => onChange(e.target.value)}
+          className="col-start-1 row-start-1 w-full appearance-none rounded-sm py-1 pl-3 pr-8 text-base text-white/80 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
+        >
+          <option value="">All Types</option>
+          <option value="Tree">Tree</option>
+          <option value="Shrub">Shrub</option>
+          <option value="Herbaceous">Herbaceous</option>
+          <option value="Aquatic">Aquatic</option>
+          <option value="Tree/shrub">Tree/Shrub</option>
+        </select>
+        <ChevronDown
+          aria-hidden="true"
+          className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-white sm:size-4"
+        />
+      </div>
+    </div>
+  );
+}
+
 // Plant Card Component
-function PlantCard({ plant, onRemove, onToggleRemoval, onEdit }) {
+function PlantCard({
+  plant,
+  onRemove,
+  onToggleRemoval,
+  onToggleFound,
+  onEdit,
+}) {
   const {
     id,
     name,
+    latinName,
     location,
+    type,
+    rank,
     imageUrl,
     isInvasive,
     needsRemoval,
+    found,
     dateAdded,
     notes,
   } = plant;
 
+  const rankColor = (rank) => {
+    switch (rank) {
+      case "A":
+        return "text-rose-600"; // Deep red - highest threat, limited distribution
+      case "B":
+        return "text-orange-500"; // Vivid orange - high threat, limited distribution
+      case "C":
+        return "text-amber-400"; // Bright amber - widely distributed
+      case "D":
+        return "text-yellow-500"; // Strong yellow - less aggressive
+      case "W":
+        return "text-blue-400"; // True blue - watch species
+      case "N":
+        return "text-emerald-500"; // Emerald green - native plants
+      default:
+        return "text-stone-400"; // Grey for unknown ranks
+    }
+  };
+
+  const bgColor = (found, isInvasive) => {
+    if (found && isInvasive) return "bg-amber-100";
+    if (found && !isInvasive) return "bg-emerald-100";
+    return "bg-white";
+  };
+
   return (
     <div
-      className={`bg-white rounded-sm shadow-md overflow-hidden border-t-6 ${
-        isInvasive ? "border-rose-400" : "border-stone-200"
-      }`}
+      className={`rounded-sm shadow-md overflow-hidden border-t-6 flex flex-col ${
+        isInvasive ? "border-rose-400" : "border-emerald-600"
+      } ${bgColor(found, isInvasive)}`}
     >
       <div className="relative h-48 bg-stone-200">
         {imageUrl ? (
@@ -205,23 +351,8 @@ function PlantCard({ plant, onRemove, onToggleRemoval, onEdit }) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-stone-100">
-            {/* <Image size={48} className="text-stone-400" /> */}
+            <Leaf size={48} className="text-stone-400" />
             <span className="ml-2 text-stone-500">No image</span>
-          </div>
-        )}
-
-        {isInvasive && (
-          <div className="absolute top-2 left-2 flex gap-2">
-            <span className="inline-flex items-center gap-x-1.5 rounded-sm px-2 py-1 text-xs font-medium text-stone-900 ring-1 ring-stone-200 ring-inset bg-white">
-              <svg
-                class="size-1.5 fill-rose-400"
-                viewBox="0 0 6 6"
-                aria-hidden="true"
-              >
-                <circle cx="3" cy="3" r="3" />
-              </svg>
-              Invasive
-            </span>
           </div>
         )}
 
@@ -240,55 +371,52 @@ function PlantCard({ plant, onRemove, onToggleRemoval, onEdit }) {
             <Trash2 size={16} className="text-rose-400" />
           </button>
         </div>
+
+        <div className="absolute top-2 left-2">
+          <div className="inline-flex items-center gap-x-1.5 rounded-sm px-2 py-1 text-xs bg-white text-stone-900 ring-1 ring-stone-200 ring-inset">
+            <input
+              type="checkbox"
+              id={`found-${id}`}
+              checked={found}
+              onChange={() => onToggleFound(id)}
+              className="h-5 w-5 accent-stone-600"
+            />
+            <label htmlFor={`found-${id}`} className="ml-2 text-stone-700">
+              Found
+            </label>
+          </div>
+        </div>
+
+        {isInvasive ? (
+          <div className="absolute bottom-2 left-2 flex gap-2">
+            <span className="inline-flex items-center gap-x-1.5 rounded-sm px-2 py-1 text-xs font-medium text-stone-900 ring-1 ring-stone-200 ring-inset bg-white">
+              <Skull className={`size-4 ${rankColor(rank)}`} />
+              {rank} Invasive
+            </span>
+          </div>
+        ) : (
+          <div className="absolute bottom-2 left-2 flex gap-2">
+            <span className="inline-flex items-center gap-x-1.5 rounded-sm px-2 py-1 text-xs font-medium text-stone-900 ring-1 ring-stone-200 ring-inset bg-white">
+              <Sprout className={`size-4 ${rankColor(rank)}`} />
+              Non-Invasive
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-stone-800 mb-2">{name}</h3>
+        <span className="text-xs text-stone-600 italic">{latinName}</span>
+        <h3 className="text-lg font-semibold text-stone-800 mb-1">{name}</h3>
 
         <p className="text-sm text-stone-600 mb-1">
-          <strong>Location:</strong> {location}
+          <strong>Type:</strong> {type}
         </p>
 
         <p className="text-sm text-stone-600 mb-1">
-          <strong>Added:</strong> {dateAdded}
+          <strong>Where:</strong> {location}
         </p>
 
-        {notes && (
-          <p className="text-sm text-stone-700 mt-2 italic">
-            {notes.length > 100 ? `${notes.substring(0, 100)}...` : notes}
-          </p>
-        )}
-
-        {/* <div className="mt-4 lg:flex justify-between items-center">
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id={`removal-${id}`}
-              checked={needsRemoval}
-              onChange={() => onToggleRemoval(id)}
-              className="h-5 w-5 accent-amber-600"
-            />
-            <label
-              htmlFor={`removal-${id}`}
-              className="ml-2 text-sm text-stone-700"
-            >
-              Mark for removal
-            </label>
-          </div>
-
-          {needsRemoval && (
-            <span class="inline-flex items-center gap-x-1.5 rounded-sm px-2 py-1 text-xs font-medium text-stone-900 ring-1 ring-stone-200 ring-inset">
-              <svg
-                class="size-1.5 fill-amber-500"
-                viewBox="0 0 6 6"
-                aria-hidden="true"
-              >
-                <circle cx="3" cy="3" r="3" />
-              </svg>
-              To Remove
-            </span>
-          )}
-        </div> */}
+        {notes && <p className="text-sm text-stone-700 mt-2">{notes}</p>}
       </div>
     </div>
   );
@@ -299,10 +427,14 @@ function PlantForm({ plant, onSubmit, onCancel }) {
   const [formData, setFormData] = useState(
     plant || {
       name: "",
+      latinName: "",
       location: "",
       imageUrl: "",
+      rank: "",
+      type: "",
       isInvasive: false,
       needsRemoval: false,
+      found: false,
       notes: "",
     }
   );
@@ -318,9 +450,9 @@ function PlantForm({ plant, onSubmit, onCancel }) {
   // Function to resize an image file
   const resizeImage = (
     file,
-    maxWidth = 600,
-    maxHeight = 600,
-    quality = 0.6
+    maxWidth = 400,
+    maxHeight = 400,
+    quality = 0.5
   ) => {
     return new Promise((resolve, reject) => {
       // Create a FileReader to read the file
@@ -438,30 +570,103 @@ function PlantForm({ plant, onSubmit, onCancel }) {
           <div>
             <div className="mb-4">
               <label className="block text-stone-700 text-sm font-medium mb-1">
-                Plant Name *
+                Plant Common Name *
               </label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-sm bg-white py-1 pl-3 text-sm text-stone-900 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
                 placeholder="Enter plant name"
               />
             </div>
 
             <div className="mb-4">
               <label className="block text-stone-700 text-sm font-medium mb-1">
-                Location on Property *
+                Plant Latin Name
+              </label>
+              <input
+                type="text"
+                name="latinName"
+                value={formData.latinName}
+                onChange={handleChange}
+                className="w-full  rounded-sm bg-white py-1 pl-3 text-sm text-stone-900 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
+                placeholder="Enter plant Latin name"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-stone-700 text-sm font-medium mb-1">
+                Location *
               </label>
               <input
                 type="text"
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full  rounded-sm bg-white py-1 pl-3 text-sm text-stone-900 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
                 placeholder="e.g., Back garden, North fence"
               />
+            </div>
+
+            <div className="mb-4 flex space-x-4">
+              <div>
+                <label
+                  htmlFor="rank"
+                  className="block text-stone-700 text-sm font-medium mb-1"
+                >
+                  Ranking
+                </label>
+                <div className="grid grid-cols-1">
+                  <select
+                    name="rank"
+                    value={formData.rank}
+                    onChange={handleChange}
+                    className="col-start-1 row-start-1 w-full appearance-none rounded-sm bg-white py-1 pl-3 pr-8 text-base text-stone-900 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
+                  >
+                    <option value=""></option>
+                    <option value="N">N - Native</option>
+                    <option value="A">A - High Priority Invasive</option>
+                    <option value="B">B - Medium Priority Invasive</option>
+                    <option value="C">C - Widespread Invasive</option>
+                    <option value="D">D - Less Aggressive Invasive</option>
+                    <option value="W">W - Watch Species Invasive</option>
+                  </select>
+                  <ChevronDown
+                    aria-hidden="true"
+                    className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-stone-500 sm:size-4"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="type"
+                  className="block text-stone-700 text-sm font-medium mb-1"
+                >
+                  Type:
+                </label>
+                <div className="grid grid-cols-1">
+                  <select
+                    name="type"
+                    value={formData.type}
+                    onChange={handleChange}
+                    className="col-start-1 row-start-1 w-full appearance-none rounded-sm bg-white py-1 pl-3 pr-8 text-base text-stone-900 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
+                  >
+                    <option value=""></option>
+                    <option value="Tree">Tree</option>
+                    <option value="Shrub">Shrub</option>
+                    <option value="Herbaceous">Herbaceous</option>
+                    <option value="Aquatic">Aquatic</option>
+                    <option value="Tree/shrub">Tree/Shrub</option>
+                  </select>
+                  <ChevronDown
+                    aria-hidden="true"
+                    className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-stone-500 sm:size-4"
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="mb-4">
@@ -494,8 +699,8 @@ function PlantForm({ plant, onSubmit, onCancel }) {
               </div>
             </div>
 
-            <div className="mb-4">
-              <div className="space-y-5">
+            <div className="mb-4 text-sm">
+              <div className="space-x-5 flex items-center">
                 <label className="flex items-center cursor-pointer">
                   <input
                     type="checkbox"
@@ -504,7 +709,7 @@ function PlantForm({ plant, onSubmit, onCancel }) {
                     onChange={handleChange}
                     className="h-5 w-5 accent-emerald-600"
                   />
-                  <span className="ml-2 text-stone-700">Invasive Species</span>
+                  <span className="ml-2 text-stone-700">Invasive</span>
                 </label>
 
                 <label className="flex items-center cursor-pointer">
@@ -516,6 +721,17 @@ function PlantForm({ plant, onSubmit, onCancel }) {
                     className="h-5 w-5 accent-emerald-600"
                   />
                   <span className="ml-2 text-stone-700">Needs Removal</span>
+                </label>
+
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="found"
+                    checked={formData.found}
+                    onChange={handleChange}
+                    className="h-5 w-5 accent-emerald-600"
+                  />
+                  <span className="ml-2 text-stone-700">Found</span>
                 </label>
               </div>
             </div>
@@ -529,7 +745,7 @@ function PlantForm({ plant, onSubmit, onCancel }) {
                 value={formData.notes}
                 onChange={handleChange}
                 rows="3"
-                className="w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full  rounded-sm bg-white py-1 pl-3 text-sm text-stone-900 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
                 placeholder="Add any additional notes..."
               ></textarea>
             </div>

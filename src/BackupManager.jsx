@@ -56,12 +56,50 @@ function BackupManager({ onImport }) {
             throw new Error("Invalid data format");
           }
 
+          // Define the expected fields with default values
+          const expectedFields = {
+            name: "",
+            latinName: "",
+            location: "",
+            imageUrl: "",
+            rank: "",
+            type: "",
+            isInvasive: false,
+            needsRemoval: false,
+            found: false,
+            notes: "",
+          };
+
+          // Process each plant item to ensure all required fields exist
+          const processedData = importedData.map((plant) => {
+            // Create a new object with all expected fields and their default values
+            const processedPlant = { ...expectedFields };
+
+            // Overlay with the actual data from the imported plant
+            Object.keys(plant).forEach((key) => {
+              processedPlant[key] = plant[key];
+            });
+
+            // Ensure the ID is preserved or generated if missing
+            if (!processedPlant.id) {
+              processedPlant.id =
+                Date.now() + Math.random().toString(36).substr(2, 5);
+            }
+
+            // Ensure dateAdded is preserved or set to current date if missing
+            if (!processedPlant.dateAdded) {
+              processedPlant.dateAdded = new Date().toLocaleDateString();
+            }
+
+            return processedPlant;
+          });
+
           // Save to localStorage
-          localStorage.setItem("propertyPlants", JSON.stringify(importedData));
+          localStorage.setItem("propertyPlants", JSON.stringify(processedData));
 
           // If callback provided, use it to update the app state
           if (onImport) {
-            onImport(importedData);
+            onImport(processedData);
           } else {
             // Otherwise just reload the page
             window.location.reload();

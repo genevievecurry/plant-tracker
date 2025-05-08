@@ -10,9 +10,10 @@ A simple web application to track plants on your property, with features to iden
 - 🖼️ Upload and store plant images
 - 🔍 Search and filter your plant collection
 - ⚠️ Mark invasive species for easy identification
-- ✅ Create to-do lists for plant removal
+- ✅ Note if plant is found in your yard (or wherever)
 - 💾 Data stored locally in your browser
 - 📤 Export/import data for backup
+- 🏙️ Starter pack for Portland [portland-area-list.json](portland-area-list.json)
 
 ## How It Works
 
@@ -32,11 +33,13 @@ This project was built using:
 If you want to make changes to the project, you'll need to build it locally after cloning this repo:
 
 1. Install dependencies:
+
    ```
    npm install
    ```
 
 2. Run in development mode:
+
    ```
    npm run dev
    ```
