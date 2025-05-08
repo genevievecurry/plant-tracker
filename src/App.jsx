@@ -73,22 +73,34 @@ export default function PlantTracker() {
   });
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-stone-50">
       {/* Header */}
-      <header className="bg-green-700 text-white p-4 shadow-md">
-        <h1 className="text-3xl font-bold">Property Plant Tracker</h1>
-      </header>
+      <div class="bg-stone-900 md:flex md:items-center md:justify-between p-4 border-b border-stone-200">
+        <div class="min-w-0 flex-1">
+          <h2 class="text-2xl/7 font-bold text-stone-200 sm:truncate sm:text-3xl sm:tracking-tight">
+            Plant Tracker
+          </h2>
+        </div>
+        <div class="mt-4 flex md:mt-0 md:ml-4">
+          <BackupManager
+            onImport={(importedPlants) => setPlants(importedPlants)}
+          />
+        </div>
+      </div>
 
       {/* Main Content */}
       <main className="flex-1 p-4 overflow-auto">
         {/* Search and Filter Bar */}
         <div className="mb-6 flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-3 text-gray-400" size={18} />
+            <Search
+              className="absolute left-3 top-3 text-stone-400"
+              size={18}
+            />
             <input
               type="text"
               placeholder="Search plants..."
-              className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full pl-10 pr-4 py-2 rounded-sm bg-white py-1.5 text-base text-stone-900 outline-1 -outline-offset-1 outline-stone-300 placeholder:text-stone-400 focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -98,39 +110,36 @@ export default function PlantTracker() {
             <label className="flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                className="h-5 w-5 accent-red-500"
+                className="h-5 w-5 accent-emerald-600"
                 checked={filterInvasive}
                 onChange={() => setFilterInvasive(!filterInvasive)}
               />
-              <span className="ml-2 text-gray-700">Invasive Only</span>
+              <span className="ml-2 text-stone-700 text-sm">Invasive Only</span>
             </label>
 
             <label className="flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                className="h-5 w-5 accent-green-500"
+                className="h-5 w-5 accent-emerald-600"
                 checked={filterRemoval}
                 onChange={() => setFilterRemoval(!filterRemoval)}
               />
-              <span className="ml-2 text-gray-700">Needs Removal</span>
+              <span className="ml-2 text-stone-700 text-sm">Needs Removal</span>
             </label>
 
             <button
-              className="px-4 py-2 bg-green-600 text-white rounded-md flex items-center gap-2 hover:bg-green-700 transition"
+              className="inline-flex items-center gap-x-2 rounded-sm bg-emerald-600 px-3.5 py-2.5 text-sm text-white shadow-xs hover:bg-emerald-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
               onClick={() => setShowAddForm(true)}
             >
               <Plus size={18} />
               <span>Add Plant</span>
             </button>
           </div>
-          <BackupManager
-            onImport={(importedPlants) => setPlants(importedPlants)}
-          />
         </div>
 
         {/* Plant List */}
         {filteredPlants.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredPlants.map((plant) => (
               <PlantCard
                 key={plant.id}
@@ -142,7 +151,7 @@ export default function PlantTracker() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-stone-500">
             <p className="text-xl">No plants found</p>
             <p className="mt-2">
               Add some plants to your tracker or adjust your filters
@@ -183,11 +192,11 @@ function PlantCard({ plant, onRemove, onToggleRemoval, onEdit }) {
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-md overflow-hidden border-l-4 ${
-        isInvasive ? "border-red-500" : "border-green-500"
+      className={`bg-white rounded-sm shadow-md overflow-hidden border-t-6 ${
+        isInvasive ? "border-rose-400" : "border-stone-200"
       }`}
     >
-      <div className="relative h-48 bg-gray-200">
+      <div className="relative h-48 bg-stone-200">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -195,77 +204,91 @@ function PlantCard({ plant, onRemove, onToggleRemoval, onEdit }) {
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gray-100">
-            {/* <Image size={48} className="text-gray-400" /> */}
-            <span className="ml-2 text-gray-500">No image</span>
+          <div className="w-full h-full flex items-center justify-center bg-stone-100">
+            {/* <Image size={48} className="text-stone-400" /> */}
+            <span className="ml-2 text-stone-500">No image</span>
+          </div>
+        )}
+
+        {isInvasive && (
+          <div className="absolute top-2 left-2 flex gap-2">
+            <span className="inline-flex items-center gap-x-1.5 rounded-sm px-2 py-1 text-xs font-medium text-stone-900 ring-1 ring-stone-200 ring-inset bg-white">
+              <svg
+                class="size-1.5 fill-rose-400"
+                viewBox="0 0 6 6"
+                aria-hidden="true"
+              >
+                <circle cx="3" cy="3" r="3" />
+              </svg>
+              Invasive
+            </span>
           </div>
         )}
 
         <div className="absolute top-2 right-2 flex gap-2">
           <button
             onClick={onEdit}
-            className="p-1 bg-white rounded-full shadow-md hover:bg-gray-100"
+            className="rounded-full bg-white p-3 shadow-xs hover:bg-white/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
           >
-            <Edit size={16} className="text-gray-600" />
+            <Edit size={16} className="text-black" />
           </button>
 
           <button
             onClick={() => onRemove(id)}
-            className="p-1 bg-white rounded-full shadow-md hover:bg-gray-100"
+            className="rounded-full bg-white p-3 shadow-xs hover:bg-white/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
           >
-            <Trash2 size={16} className="text-red-500" />
+            <Trash2 size={16} className="text-rose-400" />
           </button>
         </div>
       </div>
 
       <div className="p-4">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-semibold text-gray-800">{name}</h3>
+        <h3 className="text-lg font-semibold text-stone-800 mb-2">{name}</h3>
 
-          {isInvasive && (
-            <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded">
-              Invasive
-            </span>
-          )}
-        </div>
-
-        <p className="text-sm text-gray-600 mb-1">
+        <p className="text-sm text-stone-600 mb-1">
           <strong>Location:</strong> {location}
         </p>
 
-        <p className="text-sm text-gray-600 mb-1">
+        <p className="text-sm text-stone-600 mb-1">
           <strong>Added:</strong> {dateAdded}
         </p>
 
         {notes && (
-          <p className="text-sm text-gray-700 mt-2 italic">
+          <p className="text-sm text-stone-700 mt-2 italic">
             {notes.length > 100 ? `${notes.substring(0, 100)}...` : notes}
           </p>
         )}
 
-        <div className="mt-4 flex justify-between items-center">
+        {/* <div className="mt-4 lg:flex justify-between items-center">
           <div className="flex items-center">
             <input
               type="checkbox"
               id={`removal-${id}`}
               checked={needsRemoval}
               onChange={() => onToggleRemoval(id)}
-              className="h-5 w-5 accent-green-600"
+              className="h-5 w-5 accent-amber-600"
             />
             <label
               htmlFor={`removal-${id}`}
-              className="ml-2 text-sm text-gray-700"
+              className="ml-2 text-sm text-stone-700"
             >
               Mark for removal
             </label>
           </div>
 
           {needsRemoval && (
-            <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded">
+            <span class="inline-flex items-center gap-x-1.5 rounded-sm px-2 py-1 text-xs font-medium text-stone-900 ring-1 ring-stone-200 ring-inset">
+              <svg
+                class="size-1.5 fill-amber-500"
+                viewBox="0 0 6 6"
+                aria-hidden="true"
+              >
+                <circle cx="3" cy="3" r="3" />
+              </svg>
               To Remove
             </span>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );
@@ -292,26 +315,12 @@ function PlantForm({ plant, onSubmit, onCancel }) {
     });
   };
 
-  // const handleImageUpload = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = (event) => {
-  //       setFormData({
-  //         ...formData,
-  //         imageUrl: event.target.result,
-  //       });
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
-
   // Function to resize an image file
   const resizeImage = (
     file,
-    maxWidth = 800,
+    maxWidth = 600,
     maxHeight = 600,
-    quality = 0.7
+    quality = 0.6
   ) => {
     return new Promise((resolve, reject) => {
       // Create a FileReader to read the file
@@ -419,8 +428,8 @@ function PlantForm({ plant, onSubmit, onCancel }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-sm shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <h2 className="text-xl font-semibold mb-4">
             {plant ? "Edit Plant" : "Add New Plant"}
@@ -428,7 +437,7 @@ function PlantForm({ plant, onSubmit, onCancel }) {
 
           <div>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-medium mb-1">
+              <label className="block text-stone-700 text-sm font-medium mb-1">
                 Plant Name *
               </label>
               <input
@@ -436,13 +445,13 @@ function PlantForm({ plant, onSubmit, onCancel }) {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="Enter plant name"
               />
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-medium mb-1">
+              <label className="block text-stone-700 text-sm font-medium mb-1">
                 Location on Property *
               </label>
               <input
@@ -450,13 +459,13 @@ function PlantForm({ plant, onSubmit, onCancel }) {
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="e.g., Back garden, North fence"
               />
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-medium mb-1">
+              <label className="block text-stone-700 text-sm font-medium mb-1">
                 Plant Image
               </label>
               <div className="mt-1 flex items-center">
@@ -469,7 +478,7 @@ function PlantForm({ plant, onSubmit, onCancel }) {
                 />
                 <label
                   htmlFor="image-upload"
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md cursor-pointer hover:bg-gray-200 transition"
+                  className="px-4 py-2 bg-stone-100 text-stone-700 rounded-sm cursor-pointer hover:bg-stone-200 transition"
                 >
                   Choose Image
                 </label>
@@ -486,16 +495,16 @@ function PlantForm({ plant, onSubmit, onCancel }) {
             </div>
 
             <div className="mb-4">
-              <div className="flex gap-6">
+              <div className="space-y-5">
                 <label className="flex items-center cursor-pointer">
                   <input
                     type="checkbox"
                     name="isInvasive"
                     checked={formData.isInvasive}
                     onChange={handleChange}
-                    className="h-5 w-5 accent-red-500"
+                    className="h-5 w-5 accent-emerald-600"
                   />
-                  <span className="ml-2 text-gray-700">Invasive Species</span>
+                  <span className="ml-2 text-stone-700">Invasive Species</span>
                 </label>
 
                 <label className="flex items-center cursor-pointer">
@@ -504,15 +513,15 @@ function PlantForm({ plant, onSubmit, onCancel }) {
                     name="needsRemoval"
                     checked={formData.needsRemoval}
                     onChange={handleChange}
-                    className="h-5 w-5 accent-green-500"
+                    className="h-5 w-5 accent-emerald-600"
                   />
-                  <span className="ml-2 text-gray-700">Needs Removal</span>
+                  <span className="ml-2 text-stone-700">Needs Removal</span>
                 </label>
               </div>
             </div>
 
             <div className="mb-6">
-              <label className="block text-gray-700 text-sm font-medium mb-1">
+              <label className="block text-stone-700 text-sm font-medium mb-1">
                 Notes
               </label>
               <textarea
@@ -520,7 +529,7 @@ function PlantForm({ plant, onSubmit, onCancel }) {
                 value={formData.notes}
                 onChange={handleChange}
                 rows="3"
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="Add any additional notes..."
               ></textarea>
             </div>
@@ -529,16 +538,16 @@ function PlantForm({ plant, onSubmit, onCancel }) {
               <button
                 type="button"
                 onClick={onCancel}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition"
+                className="rounded-sm bg-white px-3.5 py-2.5 text-sm font-semibold text-stone-900 shadow-xs ring-1 ring-stone-300 ring-inset hover:bg-stone-50"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 onClick={handleSubmit}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition flex items-center gap-2"
+                className="inline-flex items-center gap-x-2 rounded-sm bg-emerald-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-emerald-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
               >
-                <Save size={18} />
+                <Save size={18} className="-ml-0.5 size-5" />
                 <span>{plant ? "Save Changes" : "Add Plant"}</span>
               </button>
             </div>

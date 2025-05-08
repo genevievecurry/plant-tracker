@@ -86,22 +86,23 @@ function BackupManager({ onImport }) {
   };
 
   return (
-    <div className="flex gap-4 mt-4">
+    <span className="isolate inline-flex rounded-sm shadow-xs">
       <button
         onClick={handleExport}
-        className="px-4 py-2 bg-green-600 text-white rounded-md flex items-center gap-2 hover:bg-green-700 transition"
+        type="button"
+        className="relative inline-flex items-center gap-x-1.5 rounded-l-sm bg-stone-900 px-3 py-2 text-sm text-stone-200 ring-1 ring-stone-300 ring-inset hover:bg-stone-700 focus:z-10"
       >
         <Download size={18} />
-        <span>Export Plants Data</span>
+        <span>Export Data</span>
       </button>
-
       <div className="relative">
         <button
+          type="button"
           onClick={() => setImporting(true)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md flex items-center gap-2 hover:bg-blue-700 transition"
+          className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-sm bg-stone-900 px-3 py-2 text-sm text-stone-200 ring-1 ring-stone-300 ring-inset hover:bg-stone-700 focus:z-10"
         >
+          <span>Import Data</span>
           <Upload size={18} />
-          <span>Import Plants Data</span>
         </button>
         <input
           type="file"
@@ -111,7 +112,7 @@ function BackupManager({ onImport }) {
           onClick={(e) => e.stopPropagation()}
         />
       </div>
-    </div>
+    </span>
   );
 }
 
