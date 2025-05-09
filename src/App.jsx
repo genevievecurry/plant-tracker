@@ -84,6 +84,7 @@ export default function PlantTracker() {
   const filteredPlants = plants.filter((plant) => {
     const matchesSearch =
       plant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      plant.latinName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       plant.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (plant.notes &&
         plant.notes.toLowerCase().includes(searchTerm.toLowerCase()));
