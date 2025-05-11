@@ -9,6 +9,8 @@ import {
   ChevronDown,
   Leaf,
   Sprout,
+  Salad,
+  Shovel,
 } from "lucide-react";
 import BackupManager from "./BackupManager";
 
@@ -27,6 +29,7 @@ export default function PlantTracker() {
   const [filterFound, setFilterFound] = useState(false);
   const [filterRank, setFilterRank] = useState("");
   const [filterType, setFilterType] = useState("");
+  const [sortOrder, setSortOrder] = useState("dateAdded");
   const [editingPlant, setEditingPlant] = useState(null);
 
   // Save plants to localStorage whenever they change
@@ -36,7 +39,6 @@ export default function PlantTracker() {
 
   // Add a new plant
   const addPlant = (plant) => {
-    console.log("foo");
     setPlants([
       ...plants,
       { ...plant, id: Date.now(), dateAdded: new Date().toLocaleDateString() },
@@ -80,6 +82,79 @@ export default function PlantTracker() {
     setEditingPlant(null);
   };
 
+  const sortPlants = (plantsToSort) => {
+    const sortedPlants = [...plantsToSort];
+
+    switch (sortOrder) {
+      case "nameAsc":
+        return sortedPlants.sort((a, b) => a.name.localeCompare(b.name));
+
+      case "nameDesc":
+        return sortedPlants.sort((a, b) => b.name.localeCompare(a.name));
+
+      case "latinNameAsc":
+        return sortedPlants.sort((a, b) => {
+          // Handle plants without latinName
+          if (!a.latinName) return 1;
+          if (!b.latinName) return -1;
+
+          // Get first letter of latinName for comparison
+          const latinNameA = a.latinName.charAt(0).toUpperCase();
+          const latinNameB = b.latinName.charAt(0).toUpperCase();
+
+          return latinNameA.localeCompare(latinNameB);
+        });
+
+      case "latinNameDesc":
+        return sortedPlants.sort((a, b) => {
+          // Handle plants without latinName
+          if (!a.latinName) return 1;
+          if (!b.latinName) return -1;
+
+          // Get first letter of latinName for comparison
+          const latinNameA = a.latinName.charAt(0).toUpperCase();
+          const latinNameB = b.latinName.charAt(0).toUpperCase();
+
+          return latinNameB.localeCompare(latinNameA);
+        });
+
+      case "rank":
+        return sortedPlants.sort((a, b) => {
+          // Handle plants without rank
+          if (!a.rank) return 1;
+          if (!b.rank) return -1;
+
+          // Get first letter of rank for comparison
+          const rankA = a.rank.charAt(0).toUpperCase();
+          const rankB = b.rank.charAt(0).toUpperCase();
+
+          return rankA.localeCompare(rankB);
+        });
+
+      case "rankReverse":
+        return sortedPlants.sort((a, b) => {
+          // Handle plants without rank
+          if (!a.rank) return 1;
+          if (!b.rank) return -1;
+
+          // Get first letter of rank for comparison
+          const rankA = a.rank.charAt(0).toUpperCase();
+          const rankB = b.rank.charAt(0).toUpperCase();
+
+          return rankB.localeCompare(rankA);
+        });
+
+      case "dateAdded":
+      default:
+        return sortedPlants.sort((a, b) => {
+          // Convert dates to timestamps for comparison (newer first)
+          const dateA = new Date(a.dateAdded || 0).getTime();
+          const dateB = new Date(b.dateAdded || 0).getTime();
+          return dateB - dateA;
+        });
+    }
+  };
+
   // Filter plants based on search and filters
   const filteredPlants = plants.filter((plant) => {
     const matchesSearch =
@@ -112,30 +187,32 @@ export default function PlantTracker() {
   });
 
   return (
-    <div className="flex flex-col lg:h-screen bg-stone-50">
+    <div className="flex flex-col lg:h-screen bg-stone-50 text-stone-200">
       {/* Header */}
-      <div className="bg-stone-900 md:flex md:items-center md:justify-between space-x-2 p-4 border-b border-stone-200">
+      <div className="bg-stone-900 sm:flex sm:items-center sm:justify-between space-x-2 p-4 border-b border-stone-200">
         <div className="min-w-0 flex-1">
           <h2 className="text-2xl/7 font-bold text-stone-200 sm:truncate sm:text-3xl sm:tracking-tight">
             Plant Tracker
           </h2>
         </div>
-        <div className="mt-4 flex md:mt-0 md:ml-4">
-          <BackupManager
-            onImport={(importedPlants) => setPlants(importedPlants)}
-          />
+        <div className="flex mt-4 md:mt-0 md:ml-4 gap-x-1 justify-between">
+          <div className="flex">
+            <BackupManager
+              onImport={(importedPlants) => setPlants(importedPlants)}
+            />
+          </div>
+          <button
+            className="inline-flex items-center gap-x-1 rounded-sm bg-emerald-600 px-2 py-2 text-sm text-white shadow-xs hover:bg-emerald-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
+            onClick={() => setShowAddForm(true)}
+          >
+            <Plus size={18} />
+            <span>Add Plant</span>
+          </button>
         </div>
-        <button
-          className="inline-flex items-center gap-x-2 rounded-sm bg-emerald-600 px-3.5 py-2 text-sm text-white shadow-xs hover:bg-emerald-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
-          onClick={() => setShowAddForm(true)}
-        >
-          <Plus size={18} />
-          <span>Add Plant</span>
-        </button>
       </div>
 
-      <div className="bg-stone-900 mb-6 p-4 flex flex-col md:flex-row gap-4 text-white">
-        <div className="flex-1 relative">
+      <div className="bg-stone-900 p-4 flex flex-col lg:flex-row gap-4 text-white ">
+        <div className="flex-1 relative ">
           <Search className="absolute left-3 top-3 text-stone-400" size={18} />
           <input
             type="text"
@@ -146,50 +223,60 @@ export default function PlantTracker() {
           />
         </div>
 
-        <div className="flex-col lg:flex-row flex gap-4">
-          <label className="flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              className="h-5 w-5 accent-emerald-600"
-              checked={filterInvasive}
-              onChange={() => setFilterInvasive(!filterInvasive)}
-            />
-            <span className="ml-2 text-sm">Invasive</span>
-          </label>
+        <div className="flex-col space-y-2 lg:flex-row flex gap-4">
+          <div className="flex justify-between space-x-2">
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="h-5 w-5 accent-emerald-600"
+                checked={filterInvasive}
+                onChange={() => setFilterInvasive(!filterInvasive)}
+              />
+              <span className="ml-2 text-sm">Invasive</span>
+            </label>
 
-          <label className="flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              className="h-5 w-5 accent-emerald-600"
-              checked={filterRemoval}
-              onChange={() => setFilterRemoval(!filterRemoval)}
-            />
-            <span className="ml-2 text-sm">Needs Removal</span>
-          </label>
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="h-5 w-5 accent-emerald-600"
+                checked={filterRemoval}
+                onChange={() => setFilterRemoval(!filterRemoval)}
+              />
+              <span className="ml-2 text-sm">To Remove</span>
+            </label>
 
-          <label className="flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              className="h-5 w-5 accent-emerald-600"
-              checked={filterFound}
-              onChange={() => setFilterFound(!filterFound)}
-            />
-            <span className="ml-2 text-sm">Found</span>
-          </label>
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="h-5 w-5 accent-emerald-600"
+                checked={filterFound}
+                onChange={() => setFilterFound(!filterFound)}
+              />
+              <span className="ml-2 text-sm">Found</span>
+            </label>
+          </div>
 
           <RankFilter selectedRank={filterRank} onChange={setFilterRank} />
           <PlantTypeFilter selectedType={filterType} onChange={setFilterType} />
+          <SortOrderFilter
+            selectedSortOrder={sortOrder}
+            onChange={setSortOrder}
+          />
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 overflow-auto">
-        {/* Search and Filter Bar */}
-
+      <main className="flex-1 p-4 pt-10 overflow-auto relative ">
+        {filteredPlants.length > 0 && (
+          <div className="absolute top-2 left-1/2 -translate-x-1/2 text-stone-800 z-10 uppercase">
+            <span class="font-bold">{filteredPlants.length}</span>{" "}
+            {filteredPlants.length === 1 ? "plant" : "plants"} found!
+          </div>
+        )}
         {/* Plant List */}
         {filteredPlants.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredPlants.map((plant) => (
+            {sortPlants(filteredPlants).map((plant) => (
               <PlantCard
                 key={plant.id}
                 plant={plant}
@@ -289,6 +376,36 @@ function PlantTypeFilter({ selectedType, onChange }) {
   );
 }
 
+function SortOrderFilter({ selectedSortOrder, onChange }) {
+  return (
+    <div className="relative">
+      <label htmlFor="sort-order" className="absolute -top-4 text-xs uppercase">
+        Sort by:
+      </label>
+      <div className="grid grid-cols-1">
+        <select
+          id="sort-order"
+          value={selectedSortOrder}
+          onChange={(e) => onChange(e.target.value)}
+          className="col-start-1 row-start-1 w-full appearance-none rounded-sm py-1 pl-3 pr-8 text-base text-white/80 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
+        >
+          <option value="dateAdded">Newest First</option>
+          <option value="nameAsc">Name (A to Z)</option>
+          <option value="nameDesc">Name (Z to A)</option>
+          <option value="latinNameAsc">Latin Name 🔻</option>
+          <option value="latinNameDesc">Latin Name </option>
+          <option value="rank">Most Invasive</option>
+          <option value="rankReverse">Less Invasive</option>
+        </select>
+        <ChevronDown
+          aria-hidden="true"
+          className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-white sm:size-4"
+        />
+      </div>
+    </div>
+  );
+}
+
 // Plant Card Component
 function PlantCard({
   plant,
@@ -310,9 +427,10 @@ function PlantCard({
     found,
     dateAdded,
     notes,
+    isEdible,
   } = plant;
 
-  const rankColor = (rank) => {
+  const textColor = (rank) => {
     switch (rank) {
       case "A":
         return "text-rose-600"; // Deep red - highest threat, limited distribution
@@ -331,17 +449,78 @@ function PlantCard({
     }
   };
 
-  const bgColor = (found, isInvasive) => {
-    if (found && isInvasive) return "bg-amber-100";
-    if (found && !isInvasive) return "bg-emerald-100";
-    return "bg-white";
+  const bgColor = (found, rank) => {
+    if (!found) return "white";
+
+    switch (rank) {
+      case "A":
+        return "bg-rose-100"; // Deep red - highest threat, limited distribution
+      case "B":
+        return "bg-orange-100"; // Vivid orange - high threat, limited distribution
+      case "C":
+        return "bg-amber-100"; // Bright amber - widely distributed
+      case "D":
+        return "bg-yellow-100"; // Strong yellow - less aggressive
+      case "W":
+        return "bg-blue-100"; // True blue - watch species
+      case "N":
+        return "bg-emerald-100"; // Emerald green - native plants
+      default:
+        return "bg-stone-200"; // Grey for unknown ranks
+    }
+  };
+
+  const borderColor = (rank) => {
+    switch (rank) {
+      case "A":
+        return "border-rose-600"; // Deep red - highest threat, limited distribution
+      case "B":
+        return "border-orange-500"; // Vivid orange - high threat, limited distribution
+      case "C":
+        return "border-amber-400"; // Bright amber - widely distributed
+      case "D":
+        return "border-yellow-500"; // Strong yellow - less aggressive
+      case "W":
+        return "border-blue-400"; // True blue - watch species
+      case "N":
+        return "border-emerald-500"; // Emerald green - native plants
+      default:
+        return "border-stone-400"; // Grey for unknown ranks
+    }
+  };
+
+  const skullCount = (rank) => {
+    switch (rank) {
+      case "A":
+        return 5;
+      case "B":
+        return 4;
+      case "C":
+        return 3;
+      case "D":
+        return 2;
+      case "W":
+        return 1;
+      default:
+        return 0;
+    }
+  };
+
+  const skullFactory = (rank) => {
+    const skulls = [];
+
+    for (let i = 0; i < skullCount(rank); i++) {
+      skulls.push(<Skull className={`size-4 ${textColor(rank)}`} />);
+    }
+
+    return <div className="flex">{skulls}</div>;
   };
 
   return (
     <div
-      className={`rounded-sm shadow-md overflow-hidden border-t-6 flex flex-col ${
-        isInvasive ? "border-rose-400" : "border-emerald-600"
-      } ${bgColor(found, isInvasive)}`}
+      className={`rounded-sm shadow-md overflow-hidden border-t-6 flex flex-col ${borderColor(
+        rank
+      )} ${bgColor(found, rank)}`}
     >
       <div className="relative h-48 bg-stone-200">
         {imageUrl ? (
@@ -382,40 +561,78 @@ function PlantCard({
               onChange={() => onToggleFound(id)}
               className="h-5 w-5 accent-stone-600"
             />
-            <label htmlFor={`found-${id}`} className="ml-2 text-stone-700">
+            <label
+              htmlFor={`found-${id}`}
+              className="ml-2 text-stone-700"
+              title="Found on Property"
+            >
               Found
             </label>
           </div>
         </div>
 
-        {isInvasive ? (
-          <div className="absolute bottom-2 left-2 flex gap-2">
-            <span className="inline-flex items-center gap-x-1.5 rounded-sm px-2 py-1 text-xs font-medium text-stone-900 ring-1 ring-stone-200 ring-inset bg-white">
-              <Skull className={`size-4 ${rankColor(rank)}`} />
-              {rank} Invasive
-            </span>
+        <div className="absolute bottom-2 left-2">
+          <div className="flex space-x-2">
+            {isInvasive && rank !== "N" && rank !== "" && (
+              <div className="flex gap-2">
+                <span
+                  className="inline-flex items-center gap-x-1.5 rounded-sm px-2 py-1 text-xs text-stone-900 ring-1 ring-stone-200 ring-inset bg-white"
+                  aria-label="Invasive"
+                  title="Invasive"
+                >
+                  {skullFactory(rank)}
+                  Invasive
+                </span>
+              </div>
+            )}
+
+            {needsRemoval && found && (
+              <div className="flex gap-2">
+                <span className="inline-flex items-center gap-x-1.5 rounded-sm px-2 py-1 text-xs text-stone-900 ring-1 ring-stone-200 ring-inset bg-white">
+                  <Shovel className={`size-4 ${textColor(rank)}`} />
+                  Remove
+                </span>
+              </div>
+            )}
+
+            {!isInvasive && rank == "N" && (
+              <div className="flex gap-2">
+                <span className="inline-flex items-center gap-x-1.5 rounded-sm px-2 py-1 text-xs text-stone-900 ring-1 ring-stone-200 ring-inset bg-white">
+                  <Sprout className="size-4 text-emerald-500" />
+                  Native
+                </span>
+              </div>
+            )}
+
+            {isEdible && (
+              <div className="flex gap-2">
+                <span className="inline-flex items-center gap-x-1.5 rounded-sm px-2 py-1 text-xs text-stone-900 ring-1 ring-stone-200 ring-inset bg-white">
+                  <Salad className="size-4 text-emerald-500" />
+                  Edible
+                </span>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="absolute bottom-2 left-2 flex gap-2">
-            <span className="inline-flex items-center gap-x-1.5 rounded-sm px-2 py-1 text-xs font-medium text-stone-900 ring-1 ring-stone-200 ring-inset bg-white">
-              <Sprout className={`size-4 ${rankColor(rank)}`} />
-              Non-Invasive
-            </span>
-          </div>
-        )}
+        </div>
       </div>
 
       <div className="p-4">
-        <span className="text-xs text-stone-600 italic">{latinName}</span>
+        <span className="text-xs text-stone-600 italic leading-none">
+          {latinName}
+        </span>
         <h3 className="text-lg font-semibold text-stone-800 mb-1">{name}</h3>
 
-        <p className="text-sm text-stone-600 mb-1">
-          <strong>Type:</strong> {type}
-        </p>
+        {type && (
+          <p className="text-sm text-stone-600 mb-1">
+            <strong>Type:</strong> {type}
+          </p>
+        )}
 
-        <p className="text-sm text-stone-600 mb-1">
-          <strong>Where:</strong> {location}
-        </p>
+        {location && (
+          <p className="text-sm text-stone-600 mb-1">
+            <strong>Where:</strong> {location}
+          </p>
+        )}
 
         {notes && <p className="text-sm text-stone-700 mt-2">{notes}</p>}
       </div>
@@ -437,6 +654,7 @@ function PlantForm({ plant, onSubmit, onCancel }) {
       needsRemoval: false,
       found: false,
       notes: "",
+      isEdible: false,
     }
   );
 
@@ -553,7 +771,7 @@ function PlantForm({ plant, onSubmit, onCancel }) {
 
   const handleSubmit = () => {
     // Validation
-    if (!formData.name || !formData.location) {
+    if (!formData.name) {
       alert("Please fill in all required fields");
       return;
     }
@@ -562,7 +780,7 @@ function PlantForm({ plant, onSubmit, onCancel }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-sm shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-sm shadow-xl w-full max-w-md max-h-[95vh] overflow-y-auto">
         <div className="p-6">
           <h2 className="text-xl font-semibold mb-4">
             {plant ? "Edit Plant" : "Add New Plant"}
@@ -592,21 +810,21 @@ function PlantForm({ plant, onSubmit, onCancel }) {
                 name="latinName"
                 value={formData.latinName}
                 onChange={handleChange}
-                className="w-full  rounded-sm bg-white py-1 pl-3 text-sm text-stone-900 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
+                className="w-full rounded-sm bg-white py-1 pl-3 text-sm text-stone-900 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
                 placeholder="Enter plant Latin name"
               />
             </div>
 
             <div className="mb-4">
               <label className="block text-stone-700 text-sm font-medium mb-1">
-                Location *
+                Location
               </label>
               <input
                 type="text"
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
-                className="w-full  rounded-sm bg-white py-1 pl-3 text-sm text-stone-900 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
+                className="w-full rounded-sm bg-white py-1 pl-3 text-sm text-stone-900 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
                 placeholder="e.g., Back garden, North fence"
               />
             </div>
@@ -701,7 +919,7 @@ function PlantForm({ plant, onSubmit, onCancel }) {
             </div>
 
             <div className="mb-4 text-sm">
-              <div className="space-x-5 flex items-center">
+              <div className="grid grid-cols-2 gap-4">
                 <label className="flex items-center cursor-pointer">
                   <input
                     type="checkbox"
@@ -711,6 +929,17 @@ function PlantForm({ plant, onSubmit, onCancel }) {
                     className="h-5 w-5 accent-emerald-600"
                   />
                   <span className="ml-2 text-stone-700">Invasive</span>
+                </label>
+
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="found"
+                    checked={formData.found}
+                    onChange={handleChange}
+                    className="h-5 w-5 accent-emerald-600"
+                  />
+                  <span className="ml-2 text-stone-700">Found on Property</span>
                 </label>
 
                 <label className="flex items-center cursor-pointer">
@@ -727,12 +956,12 @@ function PlantForm({ plant, onSubmit, onCancel }) {
                 <label className="flex items-center cursor-pointer">
                   <input
                     type="checkbox"
-                    name="found"
-                    checked={formData.found}
+                    name="isEdible"
+                    checked={formData.isEdible}
                     onChange={handleChange}
                     className="h-5 w-5 accent-emerald-600"
                   />
-                  <span className="ml-2 text-stone-700">Found</span>
+                  <span className="ml-2 text-stone-700">Edible</span>
                 </label>
               </div>
             </div>

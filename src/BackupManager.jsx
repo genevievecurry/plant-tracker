@@ -68,6 +68,7 @@ function BackupManager({ onImport }) {
             needsRemoval: false,
             found: false,
             notes: "",
+            isEdible: false,
           };
 
           // Process each plant item to ensure all required fields exist
