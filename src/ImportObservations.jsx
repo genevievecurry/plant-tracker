@@ -127,51 +127,85 @@ function ImportObservations({
         }
       });
 
-      // Only filter out exact iNaturalist ID matches, but mark potential updates
-      const observationsWithMatchInfo = data.results
-        .filter((obs) => !existingInatIds.has(obs.id.toString()))
-        .map((obs) => {
-          // Check if this observation matches an existing plant
-          let matchedPlant = null;
-          let matchType = null;
+      // Filter out exact iNaturalist ID matches first
+      const filteredByInatId = data.results.filter(
+        (obs) => !existingInatIds.has(obs.id.toString())
+      );
 
-          // Check Latin name match first (most reliable)
-          if (obs.taxon && obs.taxon.name) {
+      // Now filter out duplicate scientific names, keeping only the most recent observation for each species
+      const uniqueByScientificName = [];
+      const seenScientificNames = new Set();
+
+      // Sort by observation date (most recent first) to prioritize newer observations
+      const sortedObservations = filteredByInatId.sort((a, b) => {
+        const dateA = new Date(a.observed_on || 0);
+        const dateB = new Date(b.observed_on || 0);
+        return dateB - dateA; // Most recent first
+      });
+
+      for (const obs of sortedObservations) {
+        const scientificName = obs.taxon?.name?.toLowerCase();
+
+        // Skip observations without scientific names
+        if (!scientificName) {
+          uniqueByScientificName.push(obs);
+          continue;
+        }
+
+        // Only add if we haven't seen this scientific name before
+        if (!seenScientificNames.has(scientificName)) {
+          seenScientificNames.add(scientificName);
+          uniqueByScientificName.push(obs);
+        }
+      }
+
+      // Add match information to the filtered observations
+      const observationsWithMatchInfo = uniqueByScientificName.map((obs) => {
+        // Check if this observation matches an existing plant
+        let matchedPlant = null;
+        let matchType = null;
+
+        // Check Latin name match first (most reliable)
+        if (obs.taxon && obs.taxon.name) {
+          matchedPlant = existingLatinNameLookup[obs.taxon.name.toLowerCase()];
+          if (matchedPlant) matchType = "latin";
+        }
+
+        // If no Latin match, check common name matches
+        if (!matchedPlant) {
+          // Check taxon preferred common name
+          if (obs.taxon && obs.taxon.preferred_common_name) {
             matchedPlant =
-              existingLatinNameLookup[obs.taxon.name.toLowerCase()];
-            if (matchedPlant) matchType = "latin";
+              existingCommonNameLookup[
+                obs.taxon.preferred_common_name.toLowerCase()
+              ];
+            if (matchedPlant) matchType = "common";
           }
 
-          // If no Latin match, check common name matches
-          if (!matchedPlant) {
-            // Check taxon preferred common name
-            if (obs.taxon && obs.taxon.preferred_common_name) {
-              matchedPlant =
-                existingCommonNameLookup[
-                  obs.taxon.preferred_common_name.toLowerCase()
-                ];
-              if (matchedPlant) matchType = "common";
-            }
-
-            // Check species_guess
-            if (!matchedPlant && obs.species_guess) {
-              matchedPlant =
-                existingCommonNameLookup[obs.species_guess.toLowerCase()];
-              if (matchedPlant) matchType = "species_guess";
-            }
+          // Check species_guess
+          if (!matchedPlant && obs.species_guess) {
+            matchedPlant =
+              existingCommonNameLookup[obs.species_guess.toLowerCase()];
+            if (matchedPlant) matchType = "species_guess";
           }
+        }
 
-          return {
-            ...obs,
-            matchedPlant,
-            matchType,
-            canUpdateExisting: !!matchedPlant,
-          };
-        });
+        return {
+          ...obs,
+          matchedPlant,
+          matchType,
+          canUpdateExisting: !!matchedPlant,
+        };
+      });
 
       setObservations(observationsWithMatchInfo);
 
-      console.log("observations", observations);
+      console.log("observations", observationsWithMatchInfo);
+      console.log(
+        `Filtered out ${
+          data.results.length - observationsWithMatchInfo.length
+        } duplicate scientific names`
+      );
 
       setLastFetchParams(paramKey);
 
@@ -197,8 +231,23 @@ function ImportObservations({
       ...selectedObservations,
       [id]: !selectedObservations[id],
     });
+
+    console.log("selectedObservations", selectedObservations);
   };
 
+  const handleSelectAll = (observations) => {
+    const allObservations = {};
+
+    observations.map((obs) => {
+      allObservations[obs.id] = true;
+    });
+
+    setSelectedObservations({
+      ...allObservations,
+    });
+
+    console.log("selectedObservations all", selectedObservations);
+  };
   const handleImport = async () => {
     const selectedIds = Object.keys(selectedObservations).filter(
       (id) => selectedObservations[id]
@@ -534,9 +583,10 @@ function ImportObservations({
       <div className="flex justify-between items-center mb-2">
         <p className="text-sm text-stone-600">
           {observations.length > 0
-            ? `${observations.length} observations found`
+            ? `${observations.length} unique species found`
             : "No observations found yet"}
         </p>
+
         <button
           onClick={handleRefresh}
           className="text-sm text-emerald-600 hover:text-emerald-800"
@@ -599,7 +649,17 @@ function ImportObservations({
             <div className="mb-4">
               <p>Select the plants you want to import:</p>
             </div>
-
+            <button
+              onClick={() =>
+                handleSelectAll(
+                  filterObservations(observations, observationSearchTerm)
+                )
+              }
+              className="text-sm text-emerald-600 hover:text-emerald-800"
+              disabled={loading}
+            >
+              {loading ? "Loading..." : "Select All"}
+            </button>
             <ul
               role="list"
               className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6"
