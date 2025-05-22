@@ -13,6 +13,9 @@ import {
   Shovel,
 } from "lucide-react";
 import BackupManager from "./BackupManager";
+import ImportObservations from "./ImportObservations";
+import INaturalistConnection from "./INaturalistConnection";
+import LocationSelector from "./LocationSelector";
 
 // Main App Component
 export default function PlantTracker() {
@@ -21,6 +24,46 @@ export default function PlantTracker() {
     const savedPlants = localStorage.getItem("propertyPlants");
     return savedPlants ? JSON.parse(savedPlants) : [];
   });
+  const [iNatUsername, setINatUsername] = useState(() => {
+    // Load from localStorage if available
+    const savedUsername = localStorage.getItem("inaturalist_username");
+    return savedUsername ? savedUsername : "";
+  });
+
+  const [selectedPlace, setSelectedPlace] = useState(null);
+  const [showImportPanel, setShowImportPanel] = useState(false);
+
+  const handleLocationSelected = (location) => {
+    setSelectedPlace(location);
+  };
+
+  // Handle imported plants
+
+  const handleImportComplete = (importData) => {
+    // Handle the case where importData might be the old format (array) or new format (object)
+    if (Array.isArray(importData)) {
+      // Old format - just new plants
+      setPlants([...plants, ...importData]);
+    } else {
+      // New format - handle both new and updated plants
+      const { newPlants = [], updatedPlants = [] } = importData;
+
+      // Create a map of updated plants by ID for efficient lookup
+      const updatesMap = new Map(
+        updatedPlants.map((plant) => [plant.id, plant])
+      );
+
+      // Update existing plants and add new ones
+      const updatedPlantsList = plants.map((plant) =>
+        updatesMap.has(plant.id) ? updatesMap.get(plant.id) : plant
+      );
+
+      // Add the new plants
+      setPlants([...updatedPlantsList, ...newPlants]);
+    }
+
+    setShowImportPanel(false);
+  };
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -192,10 +235,16 @@ export default function PlantTracker() {
       <div className="bg-stone-900 sm:flex sm:items-center sm:justify-between space-x-2 p-4 border-b border-stone-200">
         <div className="min-w-0 flex-1">
           <h2 className="text-2xl/7 font-bold text-stone-200 sm:truncate sm:text-3xl sm:tracking-tight">
-            Plant Tracker
+            Plant Tracker {iNatUsername}
           </h2>
         </div>
         <div className="flex mt-4 md:mt-0 md:ml-4 gap-x-1 justify-between">
+          <button
+            onClick={() => setShowImportPanel(!showImportPanel)}
+            className="relative inline-flex items-center gap-x-1.5 rounded-sm bg-stone-900 px-3 py-2 text-sm text-stone-200 ring-1 ring-stone-300 ring-inset hover:bg-stone-700 focus:z-10"
+          >
+            {showImportPanel ? "Hide Import Panel" : "iNaturalist Import"}
+          </button>
           <div className="flex">
             <BackupManager
               onImport={(importedPlants) => setPlants(importedPlants)}
@@ -267,9 +316,38 @@ export default function PlantTracker() {
 
       {/* Main Content */}
       <main className="flex-1 p-4 pt-10 overflow-auto relative ">
+        {/* iNaturalist Integration Section */}
+        <div className="mb-6 text-stone-800">
+          {showImportPanel && (
+            <div className="grid lg:grid-cols-2 lg:gap-x-4 p-4 bg-white rounded-sm shadow-md">
+              <div className="">
+                <INaturalistConnection
+                  username={iNatUsername}
+                  setUsername={setINatUsername}
+                />
+
+                {iNatUsername && (
+                  <LocationSelector
+                    onLocationSelected={handleLocationSelected}
+                  />
+                )}
+              </div>
+
+              {iNatUsername && selectedPlace && (
+                <ImportObservations
+                  username={iNatUsername}
+                  coordinates={selectedPlace}
+                  placeId={selectedPlace.id}
+                  onImportComplete={handleImportComplete} // This now handles both new and updated plants
+                />
+              )}
+            </div>
+          )}
+        </div>
+
         {filteredPlants.length > 0 && (
-          <div className="absolute top-2 left-1/2 -translate-x-1/2 text-stone-800 z-10 uppercase">
-            <span class="font-bold">{filteredPlants.length}</span>{" "}
+          <div className=" text-stone-800 z-10 uppercase">
+            <span className="font-bold">{filteredPlants.length}</span>{" "}
             {filteredPlants.length === 1 ? "plant" : "plants"} found!
           </div>
         )}
@@ -325,7 +403,7 @@ function RankFilter({ selectedRank, onChange }) {
           id="rank-filter"
           value={selectedRank}
           onChange={(e) => onChange(e.target.value)}
-          className="col-start-1 row-start-1 w-full appearance-none rounded-sm py-1 pl-3 pr-8 text-base text-white/80 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
+          className="col-start-1 row-start-1 w-full appearance-none rounded-sm py-1 pl-3 pr-8 text-base text-white/80 outline -outline-offset-1 outline-stone-300 focus:outline focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
         >
           <option value="">All Ranks</option>
           <option value="N">N - Native</option>
@@ -358,7 +436,7 @@ function PlantTypeFilter({ selectedType, onChange }) {
           id="type-filter"
           value={selectedType}
           onChange={(e) => onChange(e.target.value)}
-          className="col-start-1 row-start-1 w-full appearance-none rounded-sm py-1 pl-3 pr-8 text-base text-white/80 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
+          className="col-start-1 row-start-1 w-full appearance-none rounded-sm py-1 pl-3 pr-8 text-base text-white/80 outline -outline-offset-1 outline-stone-300 focus:outline focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
         >
           <option value="">All Types</option>
           <option value="Tree">Tree</option>
@@ -387,7 +465,7 @@ function SortOrderFilter({ selectedSortOrder, onChange }) {
           id="sort-order"
           value={selectedSortOrder}
           onChange={(e) => onChange(e.target.value)}
-          className="col-start-1 row-start-1 w-full appearance-none rounded-sm py-1 pl-3 pr-8 text-base text-white/80 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
+          className="col-start-1 row-start-1 w-full appearance-none rounded-sm py-1 pl-3 pr-8 text-base text-white/80 outline  -outline-offset-1 outline-stone-300 focus:outline focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
         >
           <option value="dateAdded">Newest First</option>
           <option value="nameAsc">Name (A to Z)</option>
@@ -407,13 +485,7 @@ function SortOrderFilter({ selectedSortOrder, onChange }) {
 }
 
 // Plant Card Component
-function PlantCard({
-  plant,
-  onRemove,
-  onToggleRemoval,
-  onToggleFound,
-  onEdit,
-}) {
+function PlantCard({ plant, onRemove, onToggleFound, onEdit }) {
   const {
     id,
     name,
@@ -425,9 +497,9 @@ function PlantCard({
     isInvasive,
     needsRemoval,
     found,
-    dateAdded,
     notes,
     isEdible,
+    iNatNotes,
   } = plant;
 
   const textColor = (rank) => {
@@ -635,6 +707,10 @@ function PlantCard({
         )}
 
         {notes && <p className="text-sm text-stone-700 mt-2">{notes}</p>}
+
+        {iNatNotes && (
+          <p className="text-xs text-stone-600 mt-2">{iNatNotes}</p>
+        )}
       </div>
     </div>
   );
@@ -975,7 +1051,7 @@ function PlantForm({ plant, onSubmit, onCancel }) {
                 value={formData.notes}
                 onChange={handleChange}
                 rows="3"
-                className="w-full  rounded-sm bg-white py-1 pl-3 text-sm text-stone-900 outline outline-1 -outline-offset-1 outline-stone-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
+                className="w-full  rounded-sm bg-white py-1 pl-3 text-sm text-stone-900 outline -outline-offset-1 outline-stone-300 focus:outline focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
                 placeholder="Add any additional notes..."
               ></textarea>
             </div>

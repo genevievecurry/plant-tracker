@@ -58,6 +58,7 @@ function BackupManager({ onImport }) {
 
           // Define the expected fields with default values
           const expectedFields = {
+            id: "",
             name: "",
             latinName: "",
             location: "",
@@ -69,6 +70,7 @@ function BackupManager({ onImport }) {
             found: false,
             notes: "",
             isEdible: false,
+            iNatNotes: "",
           };
 
           // Process each plant item to ensure all required fields exist

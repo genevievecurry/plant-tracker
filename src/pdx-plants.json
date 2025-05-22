@@ -1,0 +1,834 @@
+[
+  {
+    "latinName": "Acroptilon repens",
+    "rank": "A"
+  },
+  {
+    "latinName": "Brachypodium sylvaticum",
+    "rank": "A"
+  },
+  {
+    "latinName": "Carduus pycnocephalus and Carduus tenuiflorus",
+    "rank": "A"
+  },
+  {
+    "latinName": "Carex pendula",
+    "rank": "A"
+  },
+  {
+    "latinName": "Cortaderia jubata",
+    "rank": "A"
+  },
+  {
+    "latinName": "Echium plantagineum",
+    "rank": "A"
+  },
+  {
+    "latinName": "Heracleum mantegazzianum",
+    "rank": "A"
+  },
+  {
+    "latinName": "Hieracium aurantiacum",
+    "rank": "A"
+  },
+  {
+    "latinName": "Hieracium pratense",
+    "rank": "A"
+  },
+  {
+    "latinName": "Impatiens glandulifera",
+    "rank": "A"
+  },
+  {
+    "latinName": "Lamiastrum galeobdolon",
+    "rank": "A"
+  },
+  {
+    "latinName": "Ludwigia hexapetala",
+    "rank": "A"
+  },
+  {
+    "latinName": "Onopordum acanthium",
+    "rank": "A"
+  },
+  {
+    "latinName": "Phalaris aquatica",
+    "rank": "A"
+  },
+  {
+    "latinName": "Phragmites australis var. australis",
+    "rank": "A"
+  },
+  {
+    "latinName": "Phytolacca americana",
+    "rank": "A"
+  },
+  {
+    "latinName": "Pueraria lobata",
+    "rank": "A"
+  },
+  {
+    "latinName": "Silybum marianum",
+    "rank": "A"
+  },
+  {
+    "latinName": "Tamarix ramosissima",
+    "rank": "A"
+  },
+  {
+    "latinName": "Ulex europaeus",
+    "rank": "A"
+  },
+  {
+    "latinName": "Utricularia inflata",
+    "rank": "A"
+  },
+  {
+    "latinName": "Verbena bonariensis",
+    "rank": "A"
+  },
+  {
+    "latinName": "Abutilon theophrasti",
+    "rank": "B"
+  },
+  {
+    "latinName": "Acer platanoides",
+    "rank": "B"
+  },
+  {
+    "latinName": "Ailanthus altissima",
+    "rank": "B"
+  },
+  {
+    "latinName": "Alliaria petiolata",
+    "rank": "B"
+  },
+  {
+    "latinName": "Allium triquetrum",
+    "rank": "B"
+  },
+  {
+    "latinName": "Amorpha fruticosa",
+    "rank": "B"
+  },
+  {
+    "latinName": "Arum italicum",
+    "rank": "B"
+  },
+  {
+    "latinName": "Buddleja davidii",
+    "rank": "B"
+  },
+  {
+    "latinName": "Centaurea diffusa",
+    "rank": "B"
+  },
+  {
+    "latinName": "Centaurea stoebe ssp. micranthus",
+    "rank": "B"
+  },
+  {
+    "latinName": "Chelidonium majus",
+    "rank": "B"
+  },
+  {
+    "latinName": "Chondrilla juncea",
+    "rank": "B"
+  },
+  {
+    "latinName": "Daphne laureola",
+    "rank": "B"
+  },
+  {
+    "latinName": "Egeria densa",
+    "rank": "B"
+  },
+  {
+    "latinName": "Euphorbia oblongata",
+    "rank": "B"
+  },
+  {
+    "latinName": "Fallopia ×bohemica",
+    "rank": "B"
+  },
+  {
+    "latinName": "Galega officinalis",
+    "rank": "B"
+  },
+  {
+    "latinName": "Hieracium laevigatum",
+    "rank": "B"
+  },
+  {
+    "latinName": "Hieracium pilosella",
+    "rank": "B"
+  },
+  {
+    "latinName": "Hieracium vulgatum",
+    "rank": "B"
+  },
+  {
+    "latinName": "Iris pseudacorus",
+    "rank": "B"
+  },
+  {
+    "latinName": "Juncus effusus var. effusus",
+    "rank": "B"
+  },
+  {
+    "latinName": "Linaria dalmatica ssp. dalmatica",
+    "rank": "B"
+  },
+  {
+    "latinName": "Ludwigia peploides ssp. montevidensis",
+    "rank": "B"
+  },
+  {
+    "latinName": "Lunaria annua",
+    "rank": "B"
+  },
+  {
+    "latinName": "Lythrum portula",
+    "rank": "B"
+  },
+  {
+    "latinName": "Lythrum salicaria",
+    "rank": "B"
+  },
+  {
+    "latinName": "Myriophyllum aquaticum",
+    "rank": "B"
+  },
+  {
+    "latinName": "Pentaglottis sempervirens",
+    "rank": "B"
+  },
+  {
+    "latinName": "Polygonum convolvulus",
+    "rank": "B"
+  },
+  {
+    "latinName": "Polygonum cuspidatum",
+    "rank": "B"
+  },
+  {
+    "latinName": "Polygonum polystachyum",
+    "rank": "B"
+  },
+  {
+    "latinName": "Polygonum sachalinense",
+    "rank": "B"
+  },
+  {
+    "latinName": "Populus alba",
+    "rank": "B"
+  },
+  {
+    "latinName": "Ranunculus ficaria",
+    "rank": "B"
+  },
+  {
+    "latinName": "Solanum nigrum",
+    "rank": "B"
+  },
+  {
+    "latinName": "Viburnum opulus var. opulus",
+    "rank": "B"
+  },
+  {
+    "latinName": "Acer psuedoplatanus",
+    "rank": "C"
+  },
+  {
+    "latinName": "Aesculus hippocastanum",
+    "rank": "C"
+  },
+  {
+    "latinName": "Arctium minus",
+    "rank": "C"
+  },
+  {
+    "latinName": "Arrhenatherum elatius",
+    "rank": "C"
+  },
+  {
+    "latinName": "Betula pendula",
+    "rank": "C"
+  },
+  {
+    "latinName": "Bromus tectorum",
+    "rank": "C"
+  },
+  {
+    "latinName": "Callitriche stagnalis",
+    "rank": "C"
+  },
+  {
+    "latinName": "Calystegia sepium ssp. angulata",
+    "rank": "C"
+  },
+  {
+    "latinName": "Centaurea ×moncktonii",
+    "rank": "C"
+  },
+  {
+    "latinName": "Cirsium arvense",
+    "rank": "C"
+  },
+  {
+    "latinName": "Cirsium vulgare",
+    "rank": "C"
+  },
+  {
+    "latinName": "Clematis vitalba",
+    "rank": "C"
+  },
+  {
+    "latinName": "Conium maculatum",
+    "rank": "C"
+  },
+  {
+    "latinName": "Convolvulus arvensis",
+    "rank": "C"
+  },
+  {
+    "latinName": "Crataegus monogyna",
+    "rank": "C"
+  },
+  {
+    "latinName": "Cytisus scoparius",
+    "rank": "C"
+  },
+  {
+    "latinName": "Daucus carota",
+    "rank": "C"
+  },
+  {
+    "latinName": "Dipsacus fullonum",
+    "rank": "C"
+  },
+  {
+    "latinName": "Epipactis helleborine",
+    "rank": "C"
+  },
+  {
+    "latinName": "Foeniculum vulgare",
+    "rank": "C"
+  },
+  {
+    "latinName": "Geranium lucidum",
+    "rank": "C"
+  },
+  {
+    "latinName": "Geranium robertianum",
+    "rank": "C"
+  },
+  {
+    "latinName": "Geum urbanum",
+    "rank": "C"
+  },
+  {
+    "latinName": "Hedera helix",
+    "rank": "C"
+  },
+  {
+    "latinName": "Hedera hibernica",
+    "rank": "C"
+  },
+  {
+    "latinName": "Hypericum perforatum",
+    "rank": "C"
+  },
+  {
+    "latinName": "Hypochaeris radicata",
+    "rank": "C"
+  },
+  {
+    "latinName": "Ilex aquifolium",
+    "rank": "C"
+  },
+  {
+    "latinName": "Impatiens capensis",
+    "rank": "C"
+  },
+  {
+    "latinName": "Lactuca serriola",
+    "rank": "C"
+  },
+  {
+    "latinName": "Lapsana communis",
+    "rank": "C"
+  },
+  {
+    "latinName": "Leucanthemum vulgare",
+    "rank": "C"
+  },
+  {
+    "latinName": "Ligustrum vulgare",
+    "rank": "C"
+  },
+  {
+    "latinName": "Lotus corniculatus",
+    "rank": "C"
+  },
+  {
+    "latinName": "Melilotus alba",
+    "rank": "C"
+  },
+  {
+    "latinName": "Melissa officinalis",
+    "rank": "C"
+  },
+  {
+    "latinName": "Mentha pulegium",
+    "rank": "C"
+  },
+  {
+    "latinName": "Myriophyllum spicatum",
+    "rank": "C"
+  },
+  {
+    "latinName": "Nymphaea odorata",
+    "rank": "C"
+  },
+  {
+    "latinName": "Parentucellia viscosa",
+    "rank": "C"
+  },
+  {
+    "latinName": "Phalaris arundinacea",
+    "rank": "C"
+  },
+  {
+    "latinName": "Potamogeton crispus",
+    "rank": "C"
+  },
+  {
+    "latinName": "Potentilla recta",
+    "rank": "C"
+  },
+  {
+    "latinName": "Prunus avium",
+    "rank": "C"
+  },
+  {
+    "latinName": "Prunus laurocerasus",
+    "rank": "C"
+  },
+  {
+    "latinName": "Prunus lusitanica",
+    "rank": "C"
+  },
+  {
+    "latinName": "Ranunculus repens",
+    "rank": "C"
+  },
+  {
+    "latinName": "Robinia pseudoacacia",
+    "rank": "C"
+  },
+  {
+    "latinName": "Rosa eglanteria",
+    "rank": "C"
+  },
+  {
+    "latinName": "Rosa multiflora",
+    "rank": "C"
+  },
+  {
+    "latinName": "Rubus bifrons",
+    "rank": "C"
+  },
+  {
+    "latinName": "Rubus laciniatus",
+    "rank": "C"
+  },
+  {
+    "latinName": "Senecio jacobaea",
+    "rank": "C"
+  },
+  {
+    "latinName": "Silene coronaria",
+    "rank": "C"
+  },
+  {
+    "latinName": "Sisymbrium officinale",
+    "rank": "C"
+  },
+  {
+    "latinName": "Solanum dulcamara",
+    "rank": "C"
+  },
+  {
+    "latinName": "Sonchus arvensis, S. asper, and S. oleraceus",
+    "rank": "C"
+  },
+  {
+    "latinName": "Taeniatherum caput-medusa",
+    "rank": "C"
+  },
+  {
+    "latinName": "Tanacetum vulgare",
+    "rank": "C"
+  },
+  {
+    "latinName": "Trifolium arvense",
+    "rank": "C"
+  },
+  {
+    "latinName": "Trifolium pratense",
+    "rank": "C"
+  },
+  {
+    "latinName": "Trifolium repens",
+    "rank": "C"
+  },
+  {
+    "latinName": "Trifolium subterraneum",
+    "rank": "C"
+  },
+  {
+    "latinName": "Verbascum blattaria",
+    "rank": "C"
+  },
+  {
+    "latinName": "Verbascum thapsus",
+    "rank": "C"
+  },
+  {
+    "latinName": "Vicia cracca",
+    "rank": "C"
+  },
+  {
+    "latinName": "Vicia villosa",
+    "rank": "C"
+  },
+  {
+    "latinName": "Vinca major",
+    "rank": "C"
+  },
+  {
+    "latinName": "Vinca minor",
+    "rank": "C"
+  },
+  {
+    "latinName": "Aegopodium podagraria",
+    "rank": "D"
+  },
+  {
+    "latinName": "Agrostis alba",
+    "rank": "D"
+  },
+  {
+    "latinName": "Agrostis capillaris",
+    "rank": "D"
+  },
+  {
+    "latinName": "Agrostis stolonifera",
+    "rank": "D"
+  },
+  {
+    "latinName": "Alopecuris pratensis",
+    "rank": "D"
+  },
+  {
+    "latinName": "Anthoxanthum odoratum",
+    "rank": "D"
+  },
+  {
+    "latinName": "Bromus diandrus",
+    "rank": "D"
+  },
+  {
+    "latinName": "Chicorium intybus",
+    "rank": "D"
+  },
+  {
+    "latinName": "Elymus repens",
+    "rank": "D"
+  },
+  {
+    "latinName": "Euphorbia lathyrus",
+    "rank": "D"
+  },
+  {
+    "latinName": "Holcus lanatus",
+    "rank": "D"
+  },
+  {
+    "latinName": "Houttuynia cordata",
+    "rank": "D"
+  },
+  {
+    "latinName": "Linaria vulgaris",
+    "rank": "D"
+  },
+  {
+    "latinName": "Lolium multiflorum",
+    "rank": "D"
+  },
+  {
+    "latinName": "Lolium perenne",
+    "rank": "D"
+  },
+  {
+    "latinName": "Lotus uliginosus",
+    "rank": "D"
+  },
+  {
+    "latinName": "Mycelis muralis",
+    "rank": "D"
+  },
+  {
+    "latinName": "Phleum pratense",
+    "rank": "D"
+  },
+  {
+    "latinName": "Poa annua",
+    "rank": "D"
+  },
+  {
+    "latinName": "Ranunculus acris",
+    "rank": "D"
+  },
+  {
+    "latinName": "Rorippa nasturtium-aquaticum",
+    "rank": "D"
+  },
+  {
+    "latinName": "Schedonorus arundinaceus",
+    "rank": "D"
+  },
+  {
+    "latinName": "Secale cerale",
+    "rank": "D"
+  },
+  {
+    "latinName": "Silene latifolia",
+    "rank": "D"
+  },
+  {
+    "latinName": "Sorbus aucuparia",
+    "rank": "D"
+  },
+  {
+    "latinName": "Ulmus pumila",
+    "rank": "D"
+  },
+  {
+    "latinName": "Utricularia vulgaris",
+    "rank": "D"
+  },
+  {
+    "latinName": "Vicia sativa",
+    "rank": "D"
+  },
+  {
+    "latinName": "Ampelopsis brevipedunculata",
+    "rank": "W"
+  },
+  {
+    "latinName": "Arundinaria gigantea",
+    "rank": "W"
+  },
+  {
+    "latinName": "Aucuba japonica",
+    "rank": "W"
+  },
+  {
+    "latinName": "Butomus umbellatus",
+    "rank": "W"
+  },
+  {
+    "latinName": "Cardaria draba",
+    "rank": "W"
+  },
+  {
+    "latinName": "Carduus acanthoides",
+    "rank": "W"
+  },
+  {
+    "latinName": "Carduus nutans",
+    "rank": "W"
+  },
+  {
+    "latinName": "Centaurea calcitrapa",
+    "rank": "W"
+  },
+  {
+    "latinName": "Centaurea iberica",
+    "rank": "W"
+  },
+  {
+    "latinName": "Centaurea jacea",
+    "rank": "W"
+  },
+  {
+    "latinName": "Centaurea solstitialis",
+    "rank": "W"
+  },
+  {
+    "latinName": "Cortaderia selloana",
+    "rank": "W"
+  },
+  {
+    "latinName": "Crocosmia crocosmiiflora",
+    "rank": "W"
+  },
+  {
+    "latinName": "Cytisus monspessulanas",
+    "rank": "W"
+  },
+  {
+    "latinName": "Cytisus striatus",
+    "rank": "W"
+  },
+  {
+    "latinName": "Euphorbia esula",
+    "rank": "W"
+  },
+  {
+    "latinName": "Galium odoratum",
+    "rank": "W"
+  },
+  {
+    "latinName": "Hydrilla verticillata",
+    "rank": "W"
+  },
+  {
+    "latinName": "Laburnum watereri",
+    "rank": "W"
+  },
+  {
+    "latinName": "Lamium maculatum",
+    "rank": "W"
+  },
+  {
+    "latinName": "Lathyrus latifolius",
+    "rank": "W"
+  },
+  {
+    "latinName": "Lysimachia nummularia",
+    "rank": "W"
+  },
+  {
+    "latinName": "Melilotus officinalis",
+    "rank": "W"
+  },
+  {
+    "latinName": "Nymphoides peltata",
+    "rank": "W"
+  },
+  {
+    "latinName": "Parthenocissus quinquefolia",
+    "rank": "W"
+  },
+  {
+    "latinName": "Paulownia tomentosa",
+    "rank": "W"
+  },
+  {
+    "latinName": "Petasites japonicus",
+    "rank": "W"
+  },
+  {
+    "latinName": "Phyllostachys atrovaginata",
+    "rank": "W"
+  },
+  {
+    "latinName": "Phyllostachys heteroclada",
+    "rank": "W"
+  },
+  {
+    "latinName": "Phyllostachys nidularia",
+    "rank": "W"
+  },
+  {
+    "latinName": "Sasa palmata",
+    "rank": "W"
+  },
+  {
+    "latinName": "Sasa veitchii",
+    "rank": "W"
+  },
+  {
+    "latinName": "Solanum sarrachoides",
+    "rank": "W"
+  },
+  {
+    "latinName": "Sorghum halepense",
+    "rank": "W"
+  },
+  {
+    "latinName": "Trifolium hybridum",
+    "rank": "W"
+  },
+  {
+    "latinName": "Acer macrophyllum",
+    "rank": "N"
+  },
+  {
+    "latinName": "Alnus rubra",
+    "rank": "N"
+  },
+  {
+    "latinName": "Pseudotsuga menziesii",
+    "rank": "N"
+  },
+  {
+    "latinName": "Thuja plicata",
+    "rank": "N"
+  },
+  {
+    "latinName": "Tsuga heterophylla",
+    "rank": "N"
+  },
+  {
+    "latinName": "Abies grandis",
+    "rank": "N"
+  },
+  {
+    "latinName": "Cornus nuttallii",
+    "rank": "N"
+  },
+  {
+    "latinName": "Frangula purshiana",
+    "rank": "N"
+  },
+  {
+    "latinName": "Fraxinus latifolia",
+    "rank": "N"
+  },
+  {
+    "latinName": "Populus trichocarpa",
+    "rank": "N"
+  },
+  {
+    "latinName": "Prunus emarginata",
+    "rank": "N"
+  },
+  {
+    "latinName": "Salix scouleriana",
+    "rank": "N"
+  },
+  {
+    "latinName": "Taxus brevifolia",
+    "rank": "N"
+  },
+  {
+    "latinName": "Arbutus menziesii",
+    "rank": "N"
+  },
+  {
+    "latinName": "Crataegus gaylussacia",
+    "rank": "N"
+  },
+  {
+    "latinName": "Pinus ponderosa var. benthamiana",
+    "rank": "N"
+  },
+  {
+    "latinName": "Quercus garryana",
+    "rank": "N"
+  }
+]
